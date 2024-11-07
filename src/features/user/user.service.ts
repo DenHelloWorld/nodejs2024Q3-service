@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -60,8 +61,12 @@ export class UserService {
 
     return this.omitPassword(user);
   }
+  private updateVer(user: User): void {
+    user.version += 1;
+    user.updatedAt = Date.now();
+  }
 
-  findAll(): User[] {
+  private findAll(): User[] {
     return this.users;
   }
 
@@ -69,9 +74,12 @@ export class UserService {
     return this.users.map(this.omitPassword);
   }
 
-  findOne(id: string): User {
+  private findOne(id: string): User {
     const user = this.users.find((user) => user.id === id);
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) {
+      throw new NotFoundException("The user with this id doesn't exist");
+    }
+
     return user;
   }
 
@@ -82,25 +90,48 @@ export class UserService {
       );
     }
     const user = this.users.find((user) => user.id === id);
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) {
+      throw new NotFoundException("The user with this id doesn't exist");
+    }
 
     return this.omitPassword(user);
   }
 
-  update(id: string, updatePasswordDto: UpdatePasswordDto): User {
-    const user = this.findOne(id);
-    if (user.password !== updatePasswordDto.oldPassword) {
-      throw new BadRequestException('Old password is incorrect');
+  updatePassword(
+    id: string,
+    password: UpdatePasswordDto,
+  ): Omit<User, 'password'> {
+    if (!validate(id)) {
+      throw new BadRequestException(
+        'Invalid user ID. It must be a valid UUID.',
+      );
     }
-    user.password = updatePasswordDto.newPassword;
-    user.version += 1;
-    user.updatedAt = Date.now();
-    return user;
+
+    const user = this.findOne(id);
+
+    if (user.password !== password.oldPassword) {
+      throw new ForbiddenException('Old password is incorrect');
+    }
+
+    user.password = password.newPassword;
+    this.updateVer(user);
+
+    return this.omitPassword(user);
   }
 
   remove(id: string): void {
+    if (!validate(id)) {
+      throw new BadRequestException(
+        'Invalid user ID. It must be a valid UUID.',
+      );
+    }
+
     const index = this.users.findIndex((user) => user.id === id);
-    if (index === -1) throw new NotFoundException('User not found');
+
+    if (index === -1) {
+      throw new NotFoundException('User not found');
+    }
+
     this.users.splice(index, 1);
   }
 }
