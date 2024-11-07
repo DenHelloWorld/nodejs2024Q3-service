@@ -6,13 +6,13 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { User } from './entities/user.entity';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4, validate } from 'uuid';
 
 @Injectable()
 export class UserService {
   private users: User[] = [
     {
-      id: '1',
+      id: uuidv4(),
       login: 'john_doe',
       password: 'securePassword123',
       version: 1,
@@ -20,7 +20,7 @@ export class UserService {
       updatedAt: 1617557574000,
     },
     {
-      id: '2',
+      id: uuidv4(),
       login: 'jane_doe',
       password: 'anotherSecurePassword456',
       version: 1,
@@ -28,7 +28,7 @@ export class UserService {
       updatedAt: 1617557575000,
     },
     {
-      id: '3',
+      id: uuidv4(),
       login: 'admin_user',
       password: 'adminPassword789',
       version: 1,
@@ -76,8 +76,14 @@ export class UserService {
   }
 
   findOneOmit(id: string): Omit<User, 'password'> {
+    if (!validate(id)) {
+      throw new BadRequestException(
+        'Invalid user ID. It must be a valid UUID.',
+      );
+    }
     const user = this.users.find((user) => user.id === id);
     if (!user) throw new NotFoundException('User not found');
+
     return this.omitPassword(user);
   }
 
