@@ -1,26 +1,100 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
+import { User } from './entities/user.entity';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  private users: User[] = [
+    {
+      id: '1',
+      login: 'john_doe',
+      password: 'securePassword123',
+      version: 1,
+      createdAt: 1617557574000,
+      updatedAt: 1617557574000,
+    },
+    {
+      id: '2',
+      login: 'jane_doe',
+      password: 'anotherSecurePassword456',
+      version: 1,
+      createdAt: 1617557575000,
+      updatedAt: 1617557575000,
+    },
+    {
+      id: '3',
+      login: 'admin_user',
+      password: 'adminPassword789',
+      version: 1,
+      createdAt: 1617557576000,
+      updatedAt: 1617557576000,
+    },
+  ];
+
+  private omitPassword(user: User): Omit<User, 'password'> {
+    return {
+      id: user.id,
+      login: user.login,
+      version: user.version,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
   }
 
-  findAll() {
-    return `This action returns all user`;
+  create(createUserDto: CreateUserDto): Omit<User, 'password'> {
+    const user: User = {
+      id: uuidv4(),
+      login: createUserDto.login,
+      password: createUserDto.password,
+      version: 1,
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+    };
+    this.users.push(user);
+
+    return this.omitPassword(user);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  findAll(): User[] {
+    return this.users;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  findAllOmit(): Omit<User, 'password'>[] {
+    return this.users.map(this.omitPassword);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  findOne(id: string): User {
+    const user = this.users.find((user) => user.id === id);
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }
+
+  findOneOmit(id: string): Omit<User, 'password'> {
+    const user = this.users.find((user) => user.id === id);
+    if (!user) throw new NotFoundException('User not found');
+    return this.omitPassword(user);
+  }
+
+  update(id: string, updatePasswordDto: UpdatePasswordDto): User {
+    const user = this.findOne(id);
+    if (user.password !== updatePasswordDto.oldPassword) {
+      throw new BadRequestException('Old password is incorrect');
+    }
+    user.password = updatePasswordDto.newPassword;
+    user.version += 1;
+    user.updatedAt = Date.now();
+    return user;
+  }
+
+  remove(id: string): void {
+    const index = this.users.findIndex((user) => user.id === id);
+    if (index === -1) throw new NotFoundException('User not found');
+    this.users.splice(index, 1);
   }
 }
