@@ -8,70 +8,40 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { User } from './entities/user.entity';
 import { v4 as uuidv4, validate } from 'uuid';
+import { UserData } from './userData.model';
 
 @Injectable()
 export class UserService {
   private users: User[] = [
-    {
+    new User({
       id: uuidv4(),
       login: 'john_doe',
       password: 'securePassword123',
-      version: 1,
-      createdAt: 1617557574000,
-      updatedAt: 1617557574000,
-    },
-    {
-      id: uuidv4(),
-      login: 'jane_doe',
-      password: 'anotherSecurePassword456',
-      version: 1,
-      createdAt: 1617557575000,
-      updatedAt: 1617557575000,
-    },
-    {
+    }),
+    new User({
       id: uuidv4(),
       login: 'admin_user',
       password: 'adminPassword789',
-      version: 1,
-      createdAt: 1617557576000,
-      updatedAt: 1617557576000,
-    },
+    }),
   ];
 
-  private omitPassword(user: User): Omit<User, 'password'> {
-    return {
-      id: user.id,
-      login: user.login,
-      version: user.version,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-    };
-  }
-
-  create(createUserDto: CreateUserDto): Omit<User, 'password'> {
-    const user: User = {
+  create(createUser: CreateUserDto): Omit<UserData, 'password'> {
+    const user: User = new User({
       id: uuidv4(),
-      login: createUserDto.login,
-      password: createUserDto.password,
-      version: 1,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    };
+      login: createUser.login,
+      password: createUser.password,
+    });
     this.users.push(user);
 
-    return this.omitPassword(user);
+    return user.omitPassword();
   }
   private updateVer(user: User): void {
     user.version += 1;
     user.updatedAt = Date.now();
   }
 
-  private findAll(): User[] {
-    return this.users;
-  }
-
-  findAllOmit(): Omit<User, 'password'>[] {
-    return this.users.map(this.omitPassword);
+  findAllOmit(): Omit<UserData, 'password'>[] {
+    return this.users.map((user) => user.omitPassword());
   }
 
   private findOne(id: string): User {
@@ -83,7 +53,7 @@ export class UserService {
     return user;
   }
 
-  findOneOmit(id: string): Omit<User, 'password'> {
+  findOneOmit(id: string): Omit<UserData, 'password'> {
     if (!validate(id)) {
       throw new BadRequestException(
         'Invalid user ID. It must be a valid UUID.',
@@ -94,13 +64,13 @@ export class UserService {
       throw new NotFoundException("The user with this id doesn't exist");
     }
 
-    return this.omitPassword(user);
+    return user.omitPassword();
   }
 
   updatePassword(
     id: string,
     password: UpdatePasswordDto,
-  ): Omit<User, 'password'> {
+  ): Omit<UserData, 'password'> {
     if (!validate(id)) {
       throw new BadRequestException(
         'Invalid user ID. It must be a valid UUID.',
@@ -116,7 +86,7 @@ export class UserService {
     user.password = password.newPassword;
     this.updateVer(user);
 
-    return this.omitPassword(user);
+    return user.omitPassword();
   }
 
   remove(id: string): void {
