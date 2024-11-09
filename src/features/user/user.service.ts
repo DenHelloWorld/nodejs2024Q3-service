@@ -16,12 +16,9 @@ import { DbService } from '../../core/db/db.service';
 export class UserService {
   @Inject(DbService) private readonly db: DbService;
 
-  create(createUser: CreateUserDto): Omit<UserData, 'password'> {
-    const user: User = new User({
-      id: uuidv4(),
-      login: createUser.login,
-      password: createUser.password,
-    });
+  create(createUserDto: CreateUserDto): Omit<UserData, 'password'> {
+    const user: User = new User({ ...createUserDto });
+
     this.db.getUsers().push(user);
 
     return user.omitPassword();

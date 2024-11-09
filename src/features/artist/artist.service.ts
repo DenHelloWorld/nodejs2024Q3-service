@@ -17,12 +17,10 @@ export class ArtistService {
   @Inject(DbService) private readonly db: DbService;
 
   create(createArtistDto: CreateArtistDto): ArtistData {
-    const artist: Artist = new Artist({
-      id: uuidv4(),
-      name: createArtistDto.name,
-      grammy: createArtistDto.grammy,
-    });
+    const artist: Artist = new Artist({ ...createArtistDto });
+
     this.db.getArtists().push(artist);
+
     return artist;
   }
 

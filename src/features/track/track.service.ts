@@ -7,7 +7,7 @@ import {
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './entities/track.entity';
-import { v4 as uuidv4, validate } from 'uuid';
+import { validate } from 'uuid';
 import { TrackData } from './trackData.model';
 import { DbService } from '../../core/db/db.service';
 
@@ -15,13 +15,7 @@ import { DbService } from '../../core/db/db.service';
 export class TrackService {
   @Inject(DbService) private readonly db: DbService;
   create(createTrackDto: CreateTrackDto): TrackData {
-    const track: Track = new Track({
-      id: uuidv4(),
-      name: createTrackDto.name,
-      duration: createTrackDto.duration,
-      artistId: createTrackDto.artistId,
-      albumId: createTrackDto.albumId,
-    });
+    const track: Track = new Track({ ...createTrackDto });
     this.db.getTracks().push(track);
 
     return track;
@@ -72,13 +66,5 @@ export class TrackService {
     }
 
     this.db.getTracks().splice(index, 1);
-  }
-
-  removeArtistFromTracks(id: string): void {
-    this.db.getTracks().forEach((track) => {
-      if (track.artistId === id) {
-        track.artistId = null;
-      }
-    });
   }
 }
