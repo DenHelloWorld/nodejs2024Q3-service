@@ -7,11 +7,13 @@ import {
   BeforeInsert,
 } from 'typeorm';
 import { UserData } from '../userData.model';
+import { v4 as uuidv4 } from 'uuid';
 
 @Entity()
 export class User implements UserData {
   constructor(data: Partial<UserData>) {
     Object.assign(this, data);
+    this.id = data.id ?? uuidv4();
     this.createdAt = Date.now();
     this.updatedAt = Date.now();
   }

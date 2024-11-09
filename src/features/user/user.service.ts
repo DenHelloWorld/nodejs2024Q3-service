@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ForbiddenException,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -9,21 +10,11 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import { User } from './entities/user.entity';
 import { v4 as uuidv4, validate } from 'uuid';
 import { UserData } from './userData.model';
+import { DbService } from '../../core/db/db.service';
 
 @Injectable()
 export class UserService {
-  private users: User[] = [
-    new User({
-      id: uuidv4(),
-      login: 'john_doe',
-      password: 'securePassword123',
-    }),
-    new User({
-      id: uuidv4(),
-      login: 'admin_user',
-      password: 'adminPassword789',
-    }),
-  ];
+  @Inject(DbService) private readonly db: DbService;
 
   create(createUser: CreateUserDto): Omit<UserData, 'password'> {
     const user: User = new User({
@@ -31,7 +22,7 @@ export class UserService {
       login: createUser.login,
       password: createUser.password,
     });
-    this.users.push(user);
+    this.db.getUsers().push(user);
 
     return user.omitPassword();
   }
@@ -41,11 +32,11 @@ export class UserService {
   }
 
   findAllOmit(): Omit<UserData, 'password'>[] {
-    return this.users.map((user) => user.omitPassword());
+    return this.db.getUsers().map((user) => user.omitPassword());
   }
 
   private findOne(id: string): User {
-    const user = this.users.find((user) => user.id === id);
+    const user = this.db.getUsers().find((user) => user.id === id);
     if (!user) {
       throw new NotFoundException("The user with this id doesn't exist");
     }
@@ -59,7 +50,7 @@ export class UserService {
         'Invalid user ID. It must be a valid UUID.',
       );
     }
-    const user = this.users.find((user) => user.id === id);
+    const user = this.db.getUsers().find((user) => user.id === id);
     if (!user) {
       throw new NotFoundException("The user with this id doesn't exist");
     }
@@ -96,12 +87,12 @@ export class UserService {
       );
     }
 
-    const index = this.users.findIndex((user) => user.id === id);
+    const userIndex = this.db.getUsers().findIndex((user) => user.id === id);
 
-    if (index === -1) {
+    if (userIndex === -1) {
       throw new NotFoundException('User not found');
+    } else {
+      this.db.removeUser(userIndex);
     }
-
-    this.users.splice(index, 1);
   }
 }

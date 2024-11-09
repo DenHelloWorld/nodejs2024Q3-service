@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  Inject,
   // Inject,
   Injectable,
   NotFoundException,
@@ -9,36 +10,24 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 import { Artist } from './entities/artist.entity';
 import { v4 as uuidv4, validate } from 'uuid';
 import { ArtistData } from './artistData.model';
-// import { TrackService } from '../track/track.service';
+import { DbService } from '../../core/db/db.service';
 
 @Injectable()
 export class ArtistService {
-  // @Inject(TrackService) private readonly trackService: TrackService;
+  @Inject(DbService) private readonly db: DbService;
 
-  private artists: Artist[] = [
-    new Artist({
-      id: uuidv4(),
-      name: 'First Artist',
-      grammy: false,
-    }),
-    new Artist({
-      id: uuidv4(),
-      name: 'Second Artist',
-      grammy: true,
-    }),
-  ];
   create(createArtistDto: CreateArtistDto): ArtistData {
     const artist: Artist = new Artist({
       id: uuidv4(),
       name: createArtistDto.name,
       grammy: createArtistDto.grammy,
     });
-    this.artists.push(artist);
+    this.db.getArtists().push(artist);
     return artist;
   }
 
   findAll(): ArtistData[] {
-    return this.artists;
+    return this.db.getArtists();
   }
 
   findOne(id: string) {
@@ -47,7 +36,7 @@ export class ArtistService {
         'Invalid artist ID. It must be a valid UUID.',
       );
     }
-    const artist = this.artists.find((artist) => artist.id === id);
+    const artist = this.db.getArtists().find((artist) => artist.id === id);
     if (!artist) {
       throw new NotFoundException("The artist with this id doesn't exist");
     }
@@ -75,14 +64,14 @@ export class ArtistService {
       );
     }
 
-    const index = this.artists.findIndex((artist) => artist.id === id);
+    const artistIndex = this.db
+      .getArtists()
+      .findIndex((artist) => artist.id === id);
 
-    if (index === -1) {
+    if (artistIndex === -1) {
       throw new NotFoundException('Artist not found');
+    } else {
+      this.db.removeArtist(id, artistIndex);
     }
-
-    this.artists.splice(index, 1);
-
-    // this.trackService.removeArtistFromTracks(id);
   }
 }
