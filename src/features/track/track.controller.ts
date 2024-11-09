@@ -1,13 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  HttpStatus,
+  HttpCode,
+  UsePipes,
+  ValidationPipe,
+  Put,
+} from '@nestjs/common';
 import { TrackService } from './track.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 
 @Controller('track')
+@UsePipes(new ValidationPipe())
 export class TrackController {
   constructor(private readonly trackService: TrackService) {}
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(@Body() createTrackDto: CreateTrackDto) {
     return this.trackService.create(createTrackDto);
   }
@@ -18,17 +32,19 @@ export class TrackController {
   }
 
   @Get(':id')
+  @HttpCode(HttpStatus.OK)
   findOne(@Param('id') id: string) {
-    return this.trackService.findOne(+id);
+    return this.trackService.findOne(id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateTrackDto: UpdateTrackDto) {
-    return this.trackService.update(+id, updateTrackDto);
+    return this.trackService.update(id, updateTrackDto);
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string) {
-    return this.trackService.remove(+id);
+    return this.trackService.remove(id);
   }
 }
