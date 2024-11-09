@@ -43,12 +43,12 @@ export class TrackService {
   findOne(id: string): TrackData {
     if (!validate(id)) {
       throw new BadRequestException(
-        'Invalid user ID. It must be a valid UUID.',
+        'Invalid track ID. It must be a valid UUID.',
       );
     }
     const track = this.tracks.find((track) => track.id === id);
     if (!track) {
-      throw new NotFoundException("The user with this id doesn't exist");
+      throw new NotFoundException("The track with this id doesn't exist");
     }
 
     return track;
@@ -71,7 +71,7 @@ export class TrackService {
   remove(id: string): void {
     if (!validate(id)) {
       throw new BadRequestException(
-        'Invalid user ID. It must be a valid UUID.',
+        'Invalid track ID. It must be a valid UUID.',
       );
     }
     const index = this.tracks.findIndex((track) => track.id === id);
@@ -81,5 +81,13 @@ export class TrackService {
     }
 
     this.tracks.splice(index, 1);
+  }
+
+  removeArtistFromTracks(id: string): void {
+    this.tracks.forEach((track) => {
+      if (track.artistId === id) {
+        track.artistId = null;
+      }
+    });
   }
 }
