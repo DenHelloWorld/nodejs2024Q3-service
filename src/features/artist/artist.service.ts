@@ -61,15 +61,12 @@ export class ArtistService {
         'Invalid user ID. It must be a valid UUID.',
       );
     }
+    const artist = this.findOne(id);
 
-    const artistIndex = this.db
-      .getArtists()
-      .findIndex((artist) => artist.id === id);
-
-    if (artistIndex === -1) {
-      throw new NotFoundException('Artist not found');
+    if (!artist) {
+      throw new NotFoundException("The artist with this id doesn't exist");
     } else {
-      this.db.removeArtist(id, artistIndex);
+      this.db.removeArtist(id);
     }
   }
 }

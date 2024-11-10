@@ -63,8 +63,8 @@ export class TrackService {
 
     if (index === -1) {
       throw new NotFoundException('Track not found');
+    } else {
+      this.db.removeTrack(index);
     }
-
-    this.db.getTracks().splice(index, 1);
   }
 }

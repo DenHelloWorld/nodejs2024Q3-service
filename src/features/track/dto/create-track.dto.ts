@@ -9,9 +9,9 @@ export class CreateTrackDto {
 
   @IsUUID()
   @IsOptional()
-  artistId?: string;
+  artistId: string | null;
 
   @IsUUID()
   @IsOptional()
-  albumId?: string;
+  albumId?: string | null;
 }

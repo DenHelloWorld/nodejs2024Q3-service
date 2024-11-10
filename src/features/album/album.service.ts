@@ -60,12 +60,14 @@ export class AlbumService {
         'Invalid album ID. It must be a valid UUID.',
       );
     }
-    const index = this.db.getAlbums().findIndex((album) => album.id === id);
 
-    if (index === -1) {
-      throw new NotFoundException('Album not found');
+    const album = this.findOne(id);
+
+    if (!album) {
+      throw new NotFoundException("The album with this id doesn't exist");
+    } else {
+      console.log('id', id);
+      this.db.removeAlbum(id);
     }
-
-    this.db.getAlbums().splice(index, 1);
   }
 }
