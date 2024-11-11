@@ -2,14 +2,12 @@ import {
   Controller,
   Get,
   Post,
-  Body,
-  Put,
   Param,
   Delete,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { FavsService } from './favs.service';
-import { CreateFavDto } from './dto/create-fav.dto';
-import { UpdateFavDto } from './dto/update-fav.dto';
 
 @Controller('favs')
 export class FavsController {
@@ -37,13 +35,19 @@ export class FavsController {
     return this.favsService.findOne(+id);
   }
 
-  @Put(':id')
-  update(@Param('id') id: string, @Body() updateFavDto: UpdateFavDto) {
-    return this.favsService.update(+id, updateFavDto);
-  }
-
   @Delete('track/:id')
-  remove(@Param('id') id: string) {
+  @HttpCode(HttpStatus.NO_CONTENT)
+  deleteTrackFromFavorites(@Param('id') id: string) {
     return this.favsService.deleteTrackFromFavorites(id);
+  }
+  @Delete('album/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  deleteAlbumFromFavorites(@Param('id') id: string) {
+    return this.favsService.deleteAlbumFromFavorites(id);
+  }
+  @Delete('artist/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  deleteArtistFromFavorites(@Param('id') id: string) {
+    return this.favsService.deleteArtistFromFavorites(id);
   }
 }

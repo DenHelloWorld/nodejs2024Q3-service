@@ -1,13 +1,9 @@
 import {
   BadRequestException,
-  HttpException,
-  HttpStatus,
   Inject,
   Injectable,
-  NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
-import { CreateFavDto } from './dto/create-fav.dto';
-import { UpdateFavDto } from './dto/update-fav.dto';
 import { DbService } from '../../core/db/db.service';
 import { TrackService } from '../track/track.service';
 import { AlbumService } from '../album/album.service';
@@ -20,9 +16,6 @@ export class FavsService {
   @Inject(TrackService) private readonly trackService: TrackService;
   @Inject(AlbumService) private readonly albumService: AlbumService;
   @Inject(ArtistService) private readonly artistService: ArtistService;
-  create(createFavDto: CreateFavDto) {
-    return 'This action adds a new fav';
-  }
 
   findAll() {
     return this.db.getFavoritesResponce();
@@ -33,19 +26,54 @@ export class FavsService {
   }
 
   addTrackToFavorites(trackId: string) {
-    this.trackService.findOne(trackId);
+    if (!validate(trackId)) {
+      throw new BadRequestException(
+        'Invalid artist ID. It must be a valid UUID.',
+      );
+    }
+    const track = this.db.getTracks().find((track) => track.id === trackId);
+
+    if (!track) {
+      throw new UnprocessableEntityException(
+        `Track with id ${trackId} is not in the libraty.`,
+      );
+    }
 
     return this.db.getFavorites().tracks.push(trackId);
   }
 
   addAlbumToFavorites(albumId: string) {
-    this.albumService.findOne(albumId);
+    if (!validate(albumId)) {
+      throw new BadRequestException(
+        'Invalid artist ID. It must be a valid UUID.',
+      );
+    }
+    const album = this.db.getAlbums().find((album) => album.id === albumId);
+
+    if (!album) {
+      throw new UnprocessableEntityException(
+        `Album with id ${albumId} is not in the libraty.`,
+      );
+    }
 
     return this.db.getFavorites().albums.push(albumId);
   }
 
   addArtistToFavorites(artistid: string) {
-    this.artistService.findOne(artistid);
+    if (!validate(artistid)) {
+      throw new BadRequestException(
+        'Invalid artist ID. It must be a valid UUID.',
+      );
+    }
+    const artist = this.db
+      .getArtists()
+      .find((artist) => artist.id === artistid);
+
+    if (!artist) {
+      throw new UnprocessableEntityException(
+        `Artist with id ${artistid} is not in the libraty.`,
+      );
+    }
 
     return this.db.getFavorites().artists.push(artistid);
   }
@@ -61,18 +89,46 @@ export class FavsService {
     const index = this.db.getFavorites().tracks.indexOf(trackId);
 
     if (index === -1) {
-      throw new NotFoundException(
+      throw new UnprocessableEntityException(
         `Track with id ${trackId} is not in the favorites.`,
       );
     }
     return this.db.getFavorites().tracks.splice(index, 1);
   }
 
-  update(id: number, updateFavDto: UpdateFavDto) {
-    return `This action updates a #${id} fav`;
+  deleteAlbumFromFavorites(albumId: string) {
+    if (!validate(albumId)) {
+      throw new BadRequestException(
+        'Invalid album ID. It must be a valid UUID.',
+      );
+    }
+
+    this.albumService.findOne(albumId);
+    const index = this.db.getFavorites().albums.indexOf(albumId);
+
+    if (index === -1) {
+      throw new UnprocessableEntityException(
+        `AlbumId with id ${albumId} is not in the favorites.`,
+      );
+    }
+    return this.db.getFavorites().albums.splice(index, 1);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} fav`;
+  deleteArtistFromFavorites(artistId: string) {
+    if (!validate(artistId)) {
+      throw new BadRequestException(
+        'Invalid artist ID. It must be a valid UUID.',
+      );
+    }
+
+    this.artistService.findOne(artistId);
+    const index = this.db.getFavorites().artists.indexOf(artistId);
+
+    if (index === -1) {
+      throw new UnprocessableEntityException(
+        `Artist with id ${artistId} is not in the favorites.`,
+      );
+    }
+    return this.db.getFavorites().artists.splice(index, 1);
   }
 }
