@@ -21,7 +21,6 @@ import {
   ApiParam,
   ApiCreatedResponse,
   ApiBody,
-  ApiQuery,
 } from '@nestjs/swagger';
 
 @ApiTags('Users')
@@ -31,11 +30,6 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  @ApiQuery({ type: CreateUserDto })
-  @ApiBody({
-    description: 'The user data to create a new user.',
-    type: CreateUserDto,
-  })
   @ApiOperation({ summary: 'Create a new user' })
   @ApiCreatedResponse({
     type: CreatedUserDto,
@@ -43,6 +37,10 @@ export class UserController {
   @ApiResponse({
     status: 400,
     description: 'Bad request. Missing required fields in the request body.',
+  })
+  @ApiBody({
+    description: 'The user data to create a user.',
+    type: CreateUserDto,
   })
   @HttpCode(HttpStatus.CREATED)
   create(@Body() createUserDto: CreateUserDto) {
@@ -79,14 +77,22 @@ export class UserController {
     status: 404,
     description: 'User not found with the provided ID.',
   })
-  findOne(@Param('id') id: string) {
+  @ApiParam({ name: 'id', description: 'ID of the user' })
+  findOne(id: string) {
     return this.userService.findOneOmit(id);
   }
 
   @Put(':id')
-  @ApiQuery({ type: UpdatePasswordDto })
+  @ApiBody({
+    description: 'The user data to update the users password.',
+    type: UpdatePasswordDto,
+  })
   @ApiOperation({ summary: 'Update user password' })
-  @ApiResponse({ status: 200, description: 'Password updated successfully.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Password updated successfully.',
+    type: CreatedUserDto,
+  })
   @ApiResponse({
     status: 400,
     description: 'Bad request. Invalid user ID or missing data.',
@@ -99,10 +105,8 @@ export class UserController {
     status: 404,
     description: 'User not found with the provided ID.',
   })
-  update(
-    @Param('id') id: string,
-    @Body() updatePasswordDto: UpdatePasswordDto,
-  ) {
+  @ApiParam({ name: 'id', description: 'ID of the user' })
+  update(id: string, @Body() updatePasswordDto: UpdatePasswordDto) {
     return this.userService.updatePassword(id, updatePasswordDto);
   }
 
@@ -119,7 +123,7 @@ export class UserController {
   })
   @ApiParam({ name: 'id', description: 'ID of the user' })
   @HttpCode(HttpStatus.NO_CONTENT)
-  remove(@Param('id') id: string) {
+  remove(id: string) {
     return this.userService.remove(id);
   }
 }
