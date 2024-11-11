@@ -5,17 +5,11 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { DbService } from '../../core/db/db.service';
-import { TrackService } from '../track/track.service';
-import { AlbumService } from '../album/album.service';
-import { ArtistService } from '../artist/artist.service';
 import { validate } from 'uuid';
 
 @Injectable()
 export class FavsService {
   @Inject(DbService) private readonly db: DbService;
-  @Inject(TrackService) private readonly trackService: TrackService;
-  @Inject(AlbumService) private readonly albumService: AlbumService;
-  @Inject(ArtistService) private readonly artistService: ArtistService;
 
   findAll() {
     return this.db.getFavoritesResponce();
@@ -85,7 +79,6 @@ export class FavsService {
       );
     }
 
-    this.trackService.findOne(trackId);
     const index = this.db.getFavorites().tracks.indexOf(trackId);
 
     if (index === -1) {
@@ -103,7 +96,6 @@ export class FavsService {
       );
     }
 
-    this.albumService.findOne(albumId);
     const index = this.db.getFavorites().albums.indexOf(albumId);
 
     if (index === -1) {
@@ -121,7 +113,6 @@ export class FavsService {
       );
     }
 
-    this.artistService.findOne(artistId);
     const index = this.db.getFavorites().artists.indexOf(artistId);
 
     if (index === -1) {

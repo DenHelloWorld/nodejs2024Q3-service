@@ -35,21 +35,6 @@ export class User implements UserData {
   @Column()
   updatedAt: number;
 
-  @BeforeInsert()
-  private setDates() {
-    this.createdAt = Date.now();
-  }
-
-  @BeforeUpdate()
-  private updateTimestampBefore() {
-    this.updatedAt = Date.now();
-  }
-
-  @AfterUpdate()
-  private logUpdate() {
-    console.log(`User with ID ${this.id} was updated at ${this.updatedAt}`);
-  }
-
   omitPassword(): Omit<UserData, 'password'> {
     return {
       id: this.id,
