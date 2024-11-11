@@ -17,7 +17,7 @@ Home Library is a Node.js and NestJS-based application designed to manage a pers
 2.  **Install dependencies:**
     - `npm install`
 3.  **Set environment variables:** Create a `.env` file in the project root and configure it based on your setup. For example:
-    - `PORT1=4000`
+    - `PORT=4000`
 4.  **Run the application:**
 
     - **Development mode:**
