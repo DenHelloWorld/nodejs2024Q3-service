@@ -3,7 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Patch,
+  Put,
   Param,
   Delete,
 } from '@nestjs/common';
@@ -15,9 +15,9 @@ import { UpdateFavDto } from './dto/update-fav.dto';
 export class FavsController {
   constructor(private readonly favsService: FavsService) {}
 
-  @Post()
-  create(@Body() createFavDto: CreateFavDto) {
-    return this.favsService.create(createFavDto);
+  @Post('track/:id')
+  async addTrackToFavorites(@Param('id') trackId: string) {
+    return this.favsService.addTrackToFavorites(trackId);
   }
 
   @Get()
@@ -30,7 +30,7 @@ export class FavsController {
     return this.favsService.findOne(+id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateFavDto: UpdateFavDto) {
     return this.favsService.update(+id, updateFavDto);
   }

@@ -1,19 +1,43 @@
 import { Injectable } from '@nestjs/common';
 import { User } from '../../features/user/entities/user.entity';
-// import { v4 as uuidv4 } from 'uuid';
 import { Track } from '../../features/track/entities/track.entity';
 import { Artist } from '../../features/artist/entities/artist.entity';
 import { Album } from '../../features/album/entities/album.entity';
+import { Favorites, FavoritesResponse } from '../../features/favs/favs.model';
 
 const data = {
   users: [] as User[],
-  tracks: [] as Track[],
+  tracks: [
+    new Track({
+      name: 'TrackOne',
+      duration: 1,
+    }),
+  ] as Track[],
   artists: [] as Artist[],
   albums: [] as Album[],
+  favorites: {
+    artists: [],
+    albums: [],
+    tracks: [],
+  } as Favorites,
 };
 
 @Injectable()
 export class DbService {
+  getFavorites(): FavoritesResponse {
+    const favorites = {
+      artists: this.getArtists().filter((artist) =>
+        data.favorites.artists.includes(artist.id),
+      ),
+      albums: this.getAlbums().filter((album) =>
+        data.favorites.albums.includes(album.id),
+      ),
+      tracks: this.getTracks().filter((track) =>
+        data.favorites.tracks.includes(track.id),
+      ),
+    };
+    return favorites;
+  }
   getUsers(): User[] {
     return data.users;
   }
@@ -69,5 +93,9 @@ export class DbService {
 
   removeTrack(trackIndex: number): void {
     data.tracks.splice(trackIndex, 1);
+  }
+
+  addTrackToFavorites(trackId: string) {
+    data.favorites.tracks.push(trackId);
   }
 }
