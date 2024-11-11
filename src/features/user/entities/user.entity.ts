@@ -1,11 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  AfterUpdate,
-  BeforeUpdate,
-  BeforeInsert,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { UserData } from '../userData.model';
 import { v4 as uuidv4 } from 'uuid';
 
