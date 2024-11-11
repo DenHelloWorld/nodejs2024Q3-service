@@ -1,21 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
+import * as fs from 'fs/promises';
+import * as YAML from 'yaml';
+
 import 'dotenv/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const PORT = process.env.PORT1 || 4000;
+  const doc = fs.readFile('doc/api.yaml', 'utf8');
+  const swaggerDoc = YAML.parse(await doc);
+  SwaggerModule.setup('doc', app, swaggerDoc);
 
-  const docConfig = new DocumentBuilder()
-    .setTitle('Home Library Documentation')
-    .setDescription('This is my first documentation for swagger')
-    .setVersion('1.0')
-    .build();
-
-  const document = SwaggerModule.createDocument(app, docConfig);
-  SwaggerModule.setup('doc', app, document);
-
-  await app.listen(PORT);
+  await app.listen(process.env.PORT1 || 4000);
 }
 bootstrap();
