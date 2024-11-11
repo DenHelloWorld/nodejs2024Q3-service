@@ -1,31 +1,10 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { User } from '../../features/user/entities/user.entity';
 import { Track } from '../../features/track/entities/track.entity';
 import { Artist } from '../../features/artist/entities/artist.entity';
 import { Album } from '../../features/album/entities/album.entity';
 import { Favorites, FavoritesResponse } from '../../features/favs/favs.model';
-import { validate } from 'uuid';
-
-const data = {
-  users: [] as User[],
-  tracks: [
-    new Track({
-      name: 'TrackOne',
-      duration: 1,
-    }),
-  ] as Track[],
-  artists: [] as Artist[],
-  albums: [] as Album[],
-  favorites: {
-    artists: [],
-    albums: [],
-    tracks: [],
-  } as Favorites,
-};
+import { data } from './data';
 
 @Injectable()
 export class DbService {
