@@ -66,7 +66,6 @@ export class AlbumService {
     if (!album) {
       throw new NotFoundException("The album with this id doesn't exist");
     } else {
-      console.log('id', id);
       this.db.removeAlbum(id);
     }
   }

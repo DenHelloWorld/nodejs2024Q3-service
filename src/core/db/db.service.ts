@@ -4,7 +4,7 @@ import { Track } from '../../features/track/entities/track.entity';
 import { Artist } from '../../features/artist/entities/artist.entity';
 import { Album } from '../../features/album/entities/album.entity';
 import { Favorites, FavoritesResponse } from '../../features/favs/favs.model';
-import { data } from './data';
+import { data } from '../../../db-data/data';
 
 @Injectable()
 export class DbService {
