@@ -4,31 +4,34 @@ import { User } from '../../features/user/entities/user.entity';
 import { Track } from '../../features/track/entities/track.entity';
 import { Artist } from '../../features/artist/entities/artist.entity';
 import { Album } from '../../features/album/entities/album.entity';
+
+const data = {
+  users: [] as User[],
+  tracks: [] as Track[],
+  artists: [] as Artist[],
+  albums: [] as Album[],
+};
+
 @Injectable()
 export class DbService {
-  private users: User[] = [];
-  private tracks: Track[] = [];
-  private artists: Artist[] = [];
-  private albums: Album[] = [];
-
   getUsers(): User[] {
-    return this.users;
+    return data.users;
   }
 
   getTracks(): Track[] {
-    return this.tracks;
+    return data.tracks;
   }
 
   getArtists(): Artist[] {
-    return this.artists;
+    return data.artists;
   }
 
   getAlbums(): Album[] {
-    return this.albums;
+    return data.albums;
   }
 
   async removeAlbum(albumId: string) {
-    for (const track of this.tracks) {
+    for (const track of data.tracks) {
       if (track.albumId === albumId) {
         await this.updateTrack(track);
       }
@@ -42,7 +45,7 @@ export class DbService {
   }
 
   async updateAlbumList(albumId: string) {
-    this.albums = this.albums.filter((album) => album.id !== albumId);
+    data.albums = data.albums.filter((album) => album.id !== albumId);
   }
 
   removeArtist(artistId: string): void {
@@ -57,14 +60,14 @@ export class DbService {
         album.artistId = null;
       }
     });
-    this.artists = this.artists.filter((artist) => artist.id !== artistId);
+    data.artists = data.artists.filter((artist) => artist.id !== artistId);
   }
 
   removeUser(userIndex: number): void {
-    this.users.splice(userIndex, 1);
+    data.users.splice(userIndex, 1);
   }
 
   removeTrack(trackIndex: number): void {
-    this.tracks.splice(trackIndex, 1);
+    data.tracks.splice(trackIndex, 1);
   }
 }
