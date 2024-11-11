@@ -1,72 +1,67 @@
-# Home Library Service
+# Home Library
+
+## Project Overview
+
+Home Library is a Node.js and NestJS-based application designed to manage a personal library. This project includes modules for handling users, tracks, artists, albums, and favorites, providing a comprehensive system for organizing and interacting with your home library collection. The application also integrates Swagger for API documentation.
 
 ## Prerequisites
 
-- Git - [Download & Install Git](https://git-scm.com/downloads).
-- Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Node.js and npm
+- Docker (optional, if you want to run the application in a containerized environment)
+- NestJS CLI (for development)
 
-## Downloading
+## Setup and Installation
 
-```
-git clone {repository URL}
-```
+1.  **Clone the repository:**
+    - `git clone <repository-url>`
+    - `cd nodejs2024Q3-service`
+2.  **Install dependencies:**
+    - `npm install`
+3.  **Set environment variables:** Create a `.env` file in the project root and configure it based on your setup. For example:
+    - `PORT1=4000`
+4.  **Run the application:**
 
-## Installing NPM modules
+    - **Development mode:**
 
-```
-npm install
-```
+      - `npm run start:dev`
 
-## Running application
+    - **Production mode:**
 
-```
-npm start
-```
+      - `npm run build`
+      - `npm run start:prod`
 
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
-For more information about OpenAPI/Swagger please visit https://swagger.io/.
+## API Documentation
 
-## Testing
+Swagger is used for API documentation. To view the API docs, navigate to `http://localhost:<PORT1>/doc` after starting the application.
 
-After application running open new terminal and enter:
+## Scripts
 
-To run all tests without authorization
+- `npm run build` - Builds the application.
+- `npm run format` - Formats code using Prettier.
+- `npm run lint` - Runs ESLint on the source code.
+- `npm run start` - Starts the application in production mode.
+- `npm run start:dev` - Starts the application in development mode with live reloading.
+- `npm run test` - Runs unit tests with Jest.
+- Additional test scripts for debugging, coverage, and authentication-related tests are also included.
 
-```
-npm run test
-```
+## Technologies Used
 
-To run only one of all test suites
+- **NestJS** - A progressive Node.js framework.
+- **TypeORM** - An ORM for managing database operations.
+- **Swagger** - For generating and viewing API documentation.
+- **Jest** - For unit and end-to-end testing.
+- **ESLint & Prettier** - For code linting and formatting.
 
-```
-npm run test -- <path to suite>
-```
+## Project Structure
 
-To run all test with authorization
+- `src/features/` - Contains the feature modules (`user`, `track`, `artist`, `album`, and `favs`).
+- `src/app.module.ts` - The root module that imports all feature modules.
+- `src/doc/api.yaml` - Swagger documentation file.
 
-```
-npm run test:auth
-```
+## License
 
-To run only specific test suite with authorization
+This project is UNLICENSED.
 
-```
-npm run test:auth -- <path to suite>
-```
+---
 
-### Auto-fix and format
-
-```
-npm run lint
-```
-
-```
-npm run format
-```
-
-### Debugging in VSCode
-
-Press <kbd>F5</kbd> to debug.
-
-For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+Let me know if you'd like to include any additional details or customization!
