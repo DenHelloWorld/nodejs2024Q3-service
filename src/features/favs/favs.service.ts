@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Inject,
@@ -24,17 +25,47 @@ export class FavsService {
   }
 
   findAll() {
-    return this.db.getFavorites();
+    return this.db.getFavoritesResponce();
   }
 
   findOne(id: number) {
     return `This action returns a #${id} fav`;
   }
 
-  async addTrackToFavorites(trackId: string) {
+  addTrackToFavorites(trackId: string) {
     this.trackService.findOne(trackId);
 
-    return this.db.addTrackToFavorites(trackId);
+    return this.db.getFavorites().tracks.push(trackId);
+  }
+
+  addAlbumToFavorites(albumId: string) {
+    this.albumService.findOne(albumId);
+
+    return this.db.getFavorites().albums.push(albumId);
+  }
+
+  addArtistToFavorites(artistid: string) {
+    this.artistService.findOne(artistid);
+
+    return this.db.getFavorites().artists.push(artistid);
+  }
+
+  deleteTrackFromFavorites(trackId: string) {
+    if (!validate(trackId)) {
+      throw new BadRequestException(
+        'Invalid track ID. It must be a valid UUID.',
+      );
+    }
+
+    this.trackService.findOne(trackId);
+    const index = this.db.getFavorites().tracks.indexOf(trackId);
+
+    if (index === -1) {
+      throw new NotFoundException(
+        `Track with id ${trackId} is not in the favorites.`,
+      );
+    }
+    return this.db.getFavorites().tracks.splice(index, 1);
   }
 
   update(id: number, updateFavDto: UpdateFavDto) {

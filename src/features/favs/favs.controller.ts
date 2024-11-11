@@ -19,7 +19,14 @@ export class FavsController {
   async addTrackToFavorites(@Param('id') trackId: string) {
     return this.favsService.addTrackToFavorites(trackId);
   }
-
+  @Post('album/:id')
+  async addAlbumToFavorites(@Param('id') albumId: string) {
+    return this.favsService.addAlbumToFavorites(albumId);
+  }
+  @Post('artist/:id')
+  async addArtistToFavorites(@Param('id') artistid: string) {
+    return this.favsService.addArtistToFavorites(artistid);
+  }
   @Get()
   findAll() {
     return this.favsService.findAll();
@@ -35,8 +42,8 @@ export class FavsController {
     return this.favsService.update(+id, updateFavDto);
   }
 
-  @Delete(':id')
+  @Delete('track/:id')
   remove(@Param('id') id: string) {
-    return this.favsService.remove(+id);
+    return this.favsService.deleteTrackFromFavorites(id);
   }
 }

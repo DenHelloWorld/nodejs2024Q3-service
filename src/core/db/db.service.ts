@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from '../../features/user/entities/user.entity';
 import { Track } from '../../features/track/entities/track.entity';
 import { Artist } from '../../features/artist/entities/artist.entity';
 import { Album } from '../../features/album/entities/album.entity';
 import { Favorites, FavoritesResponse } from '../../features/favs/favs.model';
+import { validate } from 'uuid';
 
 const data = {
   users: [] as User[],
@@ -24,7 +29,7 @@ const data = {
 
 @Injectable()
 export class DbService {
-  getFavorites(): FavoritesResponse {
+  getFavoritesResponce(): FavoritesResponse {
     const favorites = {
       artists: this.getArtists().filter((artist) =>
         data.favorites.artists.includes(artist.id),
@@ -37,6 +42,9 @@ export class DbService {
       ),
     };
     return favorites;
+  }
+  getFavorites(): Favorites {
+    return data.favorites;
   }
   getUsers(): User[] {
     return data.users;
@@ -93,9 +101,5 @@ export class DbService {
 
   removeTrack(trackIndex: number): void {
     data.tracks.splice(trackIndex, 1);
-  }
-
-  addTrackToFavorites(trackId: string) {
-    data.favorites.tracks.push(trackId);
   }
 }
