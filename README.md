@@ -60,7 +60,3 @@ Swagger is used for API documentation. To view the API docs, navigate to `http:/
 ## License
 
 This project is UNLICENSED.
-
----
-
-Let me know if you'd like to include any additional details or customization!
