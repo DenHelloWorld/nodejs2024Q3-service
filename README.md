@@ -7,7 +7,6 @@ Home Library is a Node.js and NestJS-based application designed to manage a pers
 ## Prerequisites
 
 - Node.js and npm
-- Docker (optional, if you want to run the application in a containerized environment)
 - NestJS CLI (for development)
 
 ## Setup and Installation
