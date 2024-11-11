@@ -12,6 +12,6 @@ async function bootstrap() {
   const swaggerDoc = YAML.parse(await doc);
   SwaggerModule.setup('doc', app, swaggerDoc);
 
-  await app.listen(process.env.PORT1 || 4000);
+  await app.listen(process.env.PORT || 4000);
 }
 bootstrap();
