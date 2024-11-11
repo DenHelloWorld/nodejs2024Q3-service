@@ -1,0 +1,5 @@
+export interface ArtistData {
+  id: string; // uuid v4
+  name: string;
+  grammy: boolean;
+}
