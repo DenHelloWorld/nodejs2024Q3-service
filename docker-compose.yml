@@ -1,22 +1,22 @@
 services:
   app:
     build:
-      context: . # путь к Dockerfile вашего приложения
+      context: .
     container_name: home_library_app
     restart: always
     ports:
-      - '4000:4000' # Порт на хосте : Порт в контейнере
+      - '4000:4000'
     volumes:
-      - .:/app # подмонтирует папку с кодом для отслеживания изменений
+      - .:/app
     environment:
-      - DATABASE_URL=postgres://myuser:mypassword@db:5432/mydatabase # URL для подключения к БД
+      - DATABASE_URL=postgres://myuser:mypassword@db:5432/mydatabase
     depends_on:
-      - db # обеспечивает запуск PostgreSQL до запуска приложения
+      - db
     networks:
       - my_network
 
   db:
-    image: postgres:13 # использует PostgreSQL версии 13
+    image: postgres:13
     container_name: home_library_db
     restart: always
     environment:
@@ -24,9 +24,9 @@ services:
       POSTGRES_USER: myuser
       POSTGRES_PASSWORD: mypassword
     ports:
-      - '5432:5432' # проброс порта PostgreSQL
+      - '5432:5432'
     volumes:
-      - db_data:/var/lib/postgresql/data # хранение данных вне контейнера
+      - db_data:/var/lib/postgresql/data
     networks:
       - my_network
 
@@ -35,4 +35,4 @@ networks:
     driver: bridge
 
 volumes:
-  db_data: # volume для хранения данных PostgreSQL
+  db_data:
