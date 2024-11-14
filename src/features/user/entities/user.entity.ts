@@ -1,14 +1,23 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { UserData } from '../userData.model';
 import { v4 as uuidv4 } from 'uuid';
+import { IsInt } from 'class-validator';
 
 @Entity()
 export class User implements UserData {
-  constructor(data: Partial<UserData>) {
-    Object.assign(this, data);
-    this.id = data.id ?? uuidv4();
-    this.createdAt = Date.now();
-    this.updatedAt = Date.now();
+  constructor(data?: Partial<UserData>) {
+    if (data) {
+      Object.assign(this, data);
+      this.id = data.id ?? uuidv4();
+      this.version = data.version ?? 1;
+      this.updatedAt = data.updatedAt ?? +new Date();
+      this.createdAt = data.createdAt ?? +new Date();
+    } else {
+      this.id = uuidv4();
+      this.version = 1;
+      this.updatedAt = +new Date();
+      this.createdAt = +new Date();
+    }
   }
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -19,14 +28,18 @@ export class User implements UserData {
   @Column()
   password: string;
 
-  @Column()
-  version = 1;
+  @IsInt()
+  version: number;
 
-  @Column()
+  @IsInt()
   createdAt: number;
 
-  @Column()
+  @IsInt()
   updatedAt: number;
+
+  showVersion() {
+    console.log('version', this.version);
+  }
 
   omitPassword(): Omit<UserData, 'password'> {
     return {

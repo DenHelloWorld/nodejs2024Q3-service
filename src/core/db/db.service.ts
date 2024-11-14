@@ -1,13 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { User } from '../../features/user/entities/user.entity';
 import { Track } from '../../features/track/entities/track.entity';
 import { Artist } from '../../features/artist/entities/artist.entity';
 import { Album } from '../../features/album/entities/album.entity';
 import { Favorites, FavoritesResponse } from '../../features/favs/favs.model';
 import { data } from '../../../db-data/data';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class DbService {
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
   getFavoritesResponce(): FavoritesResponse {
     const favorites = {
       artists: this.getArtists().filter((artist) =>
@@ -25,8 +31,8 @@ export class DbService {
   getFavorites(): Favorites {
     return data.favorites;
   }
-  getUsers(): User[] {
-    return data.users;
+  async getUsers(): Promise<User[]> {
+    return await this.userRepository.find(); // Извлекаем всех пользователей из базы данных
   }
 
   getTracks(): Track[] {
@@ -74,8 +80,8 @@ export class DbService {
     data.artists = data.artists.filter((artist) => artist.id !== artistId);
   }
 
-  removeUser(userIndex: number): void {
-    data.users.splice(userIndex, 1);
+  async removeUser(userToRemove: User): Promise<void> {
+    await this.userRepository.remove(userToRemove);
   }
 
   removeTrack(trackIndex: number): void {

@@ -23,4 +23,4 @@ RUN npm run build
 EXPOSE 4000
 
 
-CMD ["nodemon", "npm", "run", "start:docker"]
+CMD ["npm", "run", "start:docker"]

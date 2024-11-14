@@ -1,15 +1,24 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { UserModule } from './features/user/user.module';
-import { TrackModule } from './features/track/track.module';
-import { ArtistModule } from './features/artist/artist.module';
-import { AlbumModule } from './features/album/album.module';
-import { FavsModule } from './features/favs/favs.module';
-
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import 'dotenv/config';
 @Module({
-  imports: [UserModule, TrackModule, ArtistModule, AlbumModule, FavsModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      url: process.env.DATABASE_URL,
+      synchronize: true,
+      logging: true,
+      autoLoadEntities: true,
+    }),
+
+    UserModule,
+  ],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

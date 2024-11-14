@@ -8,8 +8,8 @@ services:
       - '4000:4000'
     volumes:
       - .:/app
-    environment:
-      - DATABASE_URL=postgres://myuser:mypassword@db:5432/mydatabase
+    env_file:
+      - .env # Исправленный отступ
     depends_on:
       - db
     networks:
@@ -19,10 +19,8 @@ services:
     image: postgres:13
     container_name: home_library_db
     restart: always
-    environment:
-      POSTGRES_DB: mydatabase
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
+    env_file:
+      - .env
     ports:
       - '5432:5432'
     volumes:
