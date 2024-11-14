@@ -11,6 +11,7 @@ import { validate } from 'uuid';
 import { UserData } from './userData.model';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+
 @Injectable()
 export class UserService {
   constructor(
@@ -25,11 +26,6 @@ export class UserService {
     await this.userRepository.save(user);
     return user.omitPassword();
   }
-  private updateVer(user: User): User {
-    user.version = user.version + 1;
-    user.updatedAt = +new Date();
-    return user;
-  }
 
   async findAllOmit(): Promise<Omit<UserData, 'password'>[]> {
     const users = await this.userRepository.find();
@@ -40,6 +36,7 @@ export class UserService {
     try {
       const user = await this.userRepository.findOne({ where: { id } });
       if (!user) throw new NotFoundException('User not found');
+      user.createdAt = +user.createdAt;
       return user;
     } catch (error) {
       console.error('findOne Error:', error);
@@ -78,13 +75,15 @@ export class UserService {
     }
 
     user.password = password.newPassword;
-    const updatedUser = this.updateVer(user);
+    user.updateVersion();
+    user.showVersion();
+    await this.userRepository.update(id, {
+      password: user.password,
+      version: user.version,
+      updatedAt: user.updatedAt,
+    });
 
-    updatedUser.showVersion();
-
-    await this.userRepository.save(updatedUser);
-
-    return updatedUser.omitPassword();
+    return user.omitPassword();
   }
 
   async remove(id: string): Promise<void> {

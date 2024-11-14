@@ -1,22 +1,19 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from 'typeorm';
 import { UserData } from '../userData.model';
-import { v4 as uuidv4 } from 'uuid';
-import { IsInt } from 'class-validator';
-
 @Entity()
 export class User implements UserData {
   constructor(data?: Partial<UserData>) {
-    if (data) {
-      Object.assign(this, data);
-      this.id = data.id ?? uuidv4();
-      this.version = data.version ?? 1;
-      this.updatedAt = data.updatedAt ?? +new Date();
-      this.createdAt = data.createdAt ?? +new Date();
-    } else {
-      this.id = uuidv4();
-      this.version = 1;
-      this.updatedAt = +new Date();
-      this.createdAt = +new Date();
+    if (data && data.login) {
+      this.login = data.login;
+    }
+    if (data && data.password) {
+      this.password = data.password;
+    }
+    if (data && data.updatedAt) {
+      this.updatedAt = data.updatedAt;
+    }
+    if (data && data.version) {
+      this.version = data.version;
     }
   }
   @PrimaryGeneratedColumn('uuid')
@@ -28,19 +25,30 @@ export class User implements UserData {
   @Column()
   password: string;
 
-  @IsInt()
+  @Column()
   version: number;
 
-  @IsInt()
+  @Column('bigint')
   createdAt: number;
 
-  @IsInt()
+  @Column('bigint')
   updatedAt: number;
 
   showVersion() {
     console.log('version', this.version);
   }
 
+  updateVersion() {
+    this.version = +this.version + 1;
+    this.updatedAt = +new Date();
+  }
+  @BeforeInsert()
+  setTimestamps() {
+    const timestamp = Date.now();
+    this.createdAt = timestamp;
+    this.updatedAt = timestamp;
+    this.version = 1;
+  }
   omitPassword(): Omit<UserData, 'password'> {
     return {
       id: this.id,
