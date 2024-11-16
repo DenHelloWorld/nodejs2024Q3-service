@@ -56,14 +56,14 @@ export class ArtistService {
       throw new NotFoundException("The artist with this id doesn't exist");
     }
 
-    if (updateArtistDto.name) {
-      artist.name = updateArtistDto.name;
-    }
+    // if (updateArtistDto.name) {
+    //   artist.name = updateArtistDto.name;
+    // }
 
-    if (updateArtistDto.grammy !== undefined) {
-      artist.grammy = updateArtistDto.grammy;
-    }
-
+    // if (updateArtistDto.grammy !== undefined) {
+    //   artist.grammy = updateArtistDto.grammy;
+    // }
+    Object.assign(artist, { ...updateArtistDto });
     await this.artistRepository.save(artist);
 
     return artist;

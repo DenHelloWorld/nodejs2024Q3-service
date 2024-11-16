@@ -1,13 +1,16 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, Entity } from 'typeorm';
 import { TrackData } from '../trackData.model';
-import { v4 as uuidv4 } from 'uuid';
-
+@Entity()
 export class Track implements TrackData {
-  constructor(data: Partial<TrackData>) {
-    Object.assign(this, data);
-    this.id = data.id ?? uuidv4();
-    this.artistId = data.artistId ?? null;
-    this.albumId = data.albumId ?? null;
+  constructor(data?: Partial<TrackData>) {
+    if (data) {
+      this.artistId =
+        data.artistId !== undefined ? data.artistId : this.artistId;
+      this.albumId = data.albumId !== undefined ? data.albumId : this.albumId;
+      this.duration =
+        data.duration !== undefined ? data.duration : this.duration;
+      this.name = data.name !== undefined ? data.name : this.name;
+    }
   }
   @PrimaryGeneratedColumn('uuid')
   id: string;
