@@ -39,7 +39,7 @@ export class UserService {
       user.createdAt = +user.createdAt;
       return user;
     } catch (error) {
-      console.error('findOne Error:', error);
+      console.error('Find One User Error:', error);
       throw error;
     }
   }

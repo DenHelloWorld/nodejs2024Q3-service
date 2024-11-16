@@ -1,11 +1,13 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, Entity } from 'typeorm';
 import { ArtistData } from '../artistData.model';
-import { v4 as uuidv4 } from 'uuid';
 
+@Entity()
 export class Artist implements ArtistData {
-  constructor(data: Partial<ArtistData>) {
-    Object.assign(this, data);
-    this.id = data.id ?? uuidv4();
+  constructor(data?: Partial<ArtistData>) {
+    if (data) {
+      this.name = data.name !== undefined ? data.name : this.name;
+      this.grammy = data.grammy !== undefined ? data.grammy : this.grammy;
+    }
   }
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -13,6 +15,6 @@ export class Artist implements ArtistData {
   @Column()
   name: string;
 
-  @Column()
+  @Column('boolean')
   grammy: boolean;
 }

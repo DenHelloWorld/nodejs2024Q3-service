@@ -7,9 +7,11 @@ services:
     ports:
       - '4000:4000'
     volumes:
-      - .:/app
+      - ./src:/app/src
+      - ./dist:/app/dist
+
     env_file:
-      - .env # Исправленный отступ
+      - .env
     depends_on:
       - db
     networks:
