@@ -10,12 +10,18 @@ import { validate } from 'uuid';
 import { ArtistData } from './artistData.model';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Album } from '../album/entities/album.entity';
+import { Track } from '../track/entities/track.entity';
 
 @Injectable()
 export class ArtistService {
   constructor(
     @InjectRepository(Artist)
     private readonly artistRepository: Repository<Artist>,
+    @InjectRepository(Album)
+    private readonly albumRepository: Repository<Album>,
+    @InjectRepository(Track)
+    private readonly trackRepository: Repository<Track>,
   ) {}
 
   async create(createArtistDto: CreateArtistDto): Promise<ArtistData> {
@@ -56,13 +62,6 @@ export class ArtistService {
       throw new NotFoundException("The artist with this id doesn't exist");
     }
 
-    // if (updateArtistDto.name) {
-    //   artist.name = updateArtistDto.name;
-    // }
-
-    // if (updateArtistDto.grammy !== undefined) {
-    //   artist.grammy = updateArtistDto.grammy;
-    // }
     Object.assign(artist, { ...updateArtistDto });
     await this.artistRepository.save(artist);
 
@@ -80,6 +79,21 @@ export class ArtistService {
 
     if (!artistToRemove) {
       throw new NotFoundException("The artist with this id doesn't exist");
+    }
+
+    const tracks = await this.trackRepository.find({
+      where: { artistId: id },
+    });
+    for (const track of tracks) {
+      track.artistId = null;
+      await this.trackRepository.save(track);
+    }
+    const albums = await this.albumRepository.find({
+      where: { artistId: id },
+    });
+    for (const album of albums) {
+      album.artistId = null;
+      await this.albumRepository.save(album);
     }
     await this.artistRepository.remove(artistToRemove);
   }

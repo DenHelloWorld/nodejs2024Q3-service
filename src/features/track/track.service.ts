@@ -15,7 +15,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 export class TrackService {
   constructor(
     @InjectRepository(Track)
-    private readonly trackRepository: Repository<Track>,
+    readonly trackRepository: Repository<Track>,
   ) {}
   async create(createTrackDto: CreateTrackDto): Promise<TrackData> {
     const track: Track = new Track(createTrackDto);

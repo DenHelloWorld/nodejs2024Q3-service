@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import 'dotenv/config';
 import { ArtistModule } from './features/artist/artist.module';
 import { TrackModule } from './features/track/track.module';
+import { AlbumModule } from './features/album/album.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -21,8 +22,7 @@ import { TrackModule } from './features/track/track.module';
     UserModule,
     ArtistModule,
     TrackModule,
+    AlbumModule,
   ],
-  controllers: [],
-  providers: [],
 })
 export class AppModule {}

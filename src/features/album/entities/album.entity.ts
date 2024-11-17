@@ -1,12 +1,15 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, Entity } from 'typeorm';
 import { AlbumData } from '../albumData.model';
-import { v4 as uuidv4 } from 'uuid';
 
+@Entity()
 export class Album implements AlbumData {
   constructor(data: Partial<AlbumData>) {
-    Object.assign(this, data);
-    this.id = data.id ?? uuidv4();
-    this.artistId = data.artistId ?? null;
+    if (data) {
+      this.name = data.name !== undefined ? data.name : this.name;
+      this.year = data.year !== undefined ? data.year : this.year;
+      this.artistId =
+        data.artistId !== undefined ? data.artistId : this.artistId;
+    }
   }
 
   @PrimaryGeneratedColumn('uuid')
