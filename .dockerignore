@@ -2,7 +2,8 @@ docker-compose.yml
 postgresDB 
 logs
 README.md
-dist
+test
 node_modules
 .git
 Dockerfile
+.vscode
