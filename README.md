@@ -6,42 +6,58 @@ Home Library is a Node.js and NestJS-based application designed to manage a pers
 
 ## Prerequisites
 
-- Node.js and npm
-- NestJS CLI (for development)
+- [Node.js](https://nodejs.org/) and [npm](https://www.npmjs.com/)
+- [NestJS](https://nestjs.com/)
+- [Docker](https://www.docker.com/get-started/)
 
 ## Setup and Installation
 
 1.  **Clone the repository:**
-    - `git clone <repository-url>`
-    - `cd nodejs2024Q3-service`
-2.  **Install dependencies:**
-    - `npm install`
-3.  **Set environment variables:** Create a `.env` file in the project root and configure it based on your setup. For example:
-    - `PORT1=4000`
-4.  **Run the application:**
+```bash
+git clone https://github.com/DenHelloWorld/nodejs2024Q3-service.git
+```
+2.  **Go to folder:**
+```bash
+cd nodejs2024Q3-service
+```
+3.  **Switch branch:**
+```bash
+git checkout home-lib-2
+```
+4.  **Install dependencies:**
+```bash
+npm install
+```
+
+5.  **Set environment variables:** Create a `.env` file in the project root and configure it based on your setup. For example:
+    - `PORT=4000`
+    - `POSTGRES_HOST=localhost`
+    - `POSTGRES_PORT=5432`
+    - `POSTGRES_USER=myuser`
+    - `POSTGRES_PASSWORD=mypassword`
+    - `POSTGRES_DB=mydatabase`
+    - `DATABASE_URL=postgres://myuser:mypassword@db:5432/mydatabase`
+6.  **Run the application:**
 
     - **Development mode:**
 
-      - `npm run start:dev`
+      > [Docker](https://www.docker.com/get-started/) must be installed and running on your device
 
-    - **Production mode:**
-
-      - `npm run build`
-      - `npm run start:prod`
+```bash
+npm run docker:build
+```
 
 ## API Documentation
 
-Swagger is used for API documentation. To view the API docs, navigate to `http://localhost:<PORT1>/doc` after starting the application.
+Swagger is used for API documentation. To view the API docs, navigate to `http://localhost:<PORT>/doc` after starting the application.
 
 ## Scripts
 
 - `npm run build` - Builds the application.
 - `npm run format` - Formats code using Prettier.
 - `npm run lint` - Runs ESLint on the source code.
-- `npm run start` - Starts the application in production mode.
-- `npm run start:dev` - Starts the application in development mode with live reloading.
+- `npm run docker:build` - Starts the application in development mode with live reloading from docker container.
 - `npm run test` - Runs unit tests with Jest.
-- Additional test scripts for debugging, coverage, and authentication-related tests are also included.
 
 ## Technologies Used
 
@@ -50,17 +66,15 @@ Swagger is used for API documentation. To view the API docs, navigate to `http:/
 - **Swagger** - For generating and viewing API documentation.
 - **Jest** - For unit and end-to-end testing.
 - **ESLint & Prettier** - For code linting and formatting.
+- **Docker** - For containerizing the application.
 
 ## Project Structure
 
 - `src/features/` - Contains the feature modules (`user`, `track`, `artist`, `album`, and `favs`).
 - `src/app.module.ts` - The root module that imports all feature modules.
-- `src/doc/api.yaml` - Swagger documentation file.
+- `doc/api.yaml` - Swagger documentation file.
+- `src/migrations` - Generated typeorm schemes.
 
 ## License
 
 This project is UNLICENSED.
-
----
-
-Let me know if you'd like to include any additional details or customization!
