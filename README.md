@@ -11,7 +11,8 @@ Home Library is a Node.js and NestJS-based application designed to manage a pers
 - [Docker](https://www.docker.com/get-started/)
 
 ## Setup and Installation
-      > Please wait until the current process is executed before starting the next one.
+
+> Please wait until the current process is executed before starting the next one.
 
 1.  **Clone the repository:**
 ```bash
