@@ -1,5 +1,6 @@
 services:
   app:
+    command: npm run start:dev
     build:
       context: .
     container_name: home_library_app
@@ -8,8 +9,13 @@ services:
       - '4000:4000'
     volumes:
       - ./src:/app/src
-      - ./dist:/app/dist
-
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+          ignore:
+            - node_modules
     env_file:
       - .env
     depends_on:

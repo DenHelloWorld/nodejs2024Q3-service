@@ -6,6 +6,7 @@ import 'dotenv/config';
 import { ArtistModule } from './features/artist/artist.module';
 import { TrackModule } from './features/track/track.module';
 import { AlbumModule } from './features/album/album.module';
+import { FavsModule } from './features/favs/favs.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -23,6 +24,7 @@ import { AlbumModule } from './features/album/album.module';
     ArtistModule,
     TrackModule,
     AlbumModule,
+    FavsModule,
   ],
 })
 export class AppModule {}

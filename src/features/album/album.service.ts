@@ -16,9 +16,9 @@ import { Track } from '../track/entities/track.entity';
 export class AlbumService {
   constructor(
     @InjectRepository(Album)
-    readonly albumRepository: Repository<Album>,
+    private readonly albumRepository: Repository<Album>,
     @InjectRepository(Track)
-    readonly trackRepository: Repository<Track>,
+    private readonly trackRepository: Repository<Track>,
   ) {}
   async create(createAlbumDto: CreateAlbumDto): Promise<AlbumData> {
     const album: Album = new Album({ ...createAlbumDto });

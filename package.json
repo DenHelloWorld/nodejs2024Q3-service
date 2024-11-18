@@ -11,7 +11,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
-    "docker:up": "docker-compose up -d",
+    "docker:up": "docker compose up --watch",
     "docker:down": "docker-compose down",
     "docker:down:cleanDb": "docker-compose down -v",
     "start:debug": "nest start --debug --watch",
@@ -22,6 +22,7 @@
     "test:artists": "jest --testMatch \"<rootDir>/artists.e2e.spec.ts\" --noStackTrace --runInBand",
     "test:tracks": "jest --testMatch \"<rootDir>/tracks.e2e.spec.ts\" --noStackTrace --runInBand",
     "test:albums": "jest --testMatch \"<rootDir>/albums.e2e.spec.ts\" --noStackTrace --runInBand",
+    "test:favorites": "jest --testMatch \"<rootDir>/favorites.e2e.spec.ts\" --noStackTrace --runInBand",
     "test:auth": "cross-env TEST_MODE=auth jest --testPathIgnorePatterns refres h.e2e.spec.ts --noStackTrace --runInBand",
     "test:refresh": "cross-env TEST_MODE=auth jest --testPathPattern refresh.e2e.spec.ts --noStackTrace --runInBand",
     "test:watch": "jest --watch",
@@ -49,10 +50,10 @@
     "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.20",
     "uuid": "^8.3.2",
+    "@nestjs/cli": "^8.0.0",
     "yaml": "^2.6.0"
   },
   "devDependencies": {
-    "@nestjs/cli": "^8.0.0",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^9.4.3",
     "@types/bcrypt": "^5.0.0",
