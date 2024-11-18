@@ -58,6 +58,7 @@ Swagger is used for API documentation. To view the API docs, navigate to `http:/
 - `npm run lint` - Runs ESLint on the source code.
 - `npm run docker:build` - Starts the application in development mode with live reloading from docker container.
 - `npm run test` - Runs unit tests with Jest.
+- `npm run vulnerabilities` - Runs vulnerabilities scanning.
 
 ## Technologies Used
 
