@@ -1,6 +1,5 @@
 services:
   app:
-    command: npm run start:dev
     build:
       context: .
     container_name: home_library_app
@@ -8,10 +7,10 @@ services:
     ports:
       - '4000:4000'
     volumes:
-      - ./src:/app/src
+      - logs_data:/app/logs
     develop:
       watch:
-        - action: sync
+        - action: sync+restart
           path: ./src
           target: /app/src
           ignore:
@@ -42,3 +41,4 @@ networks:
 
 volumes:
   db_data:
+  logs_data:

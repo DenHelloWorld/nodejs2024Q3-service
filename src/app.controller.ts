@@ -7,7 +7,6 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    console.log('Received request on /');
     return this.appService.getHello();
   }
 }

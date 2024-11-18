@@ -1,12 +1,7 @@
 FROM node:22-alpine
-
 WORKDIR /app
-
 COPY package*.json ./
-RUN npm install --omit=dev
-
+RUN npm install --omit=dev && npm cache clean --force
+RUN apk add --no-cache bash
 COPY . .
-
-EXPOSE 4000
-
-CMD ["npm", "run", "start:dev"]
+ENTRYPOINT ["sh", "-c", "npm run start"]
