@@ -1,5 +1,5 @@
 import { LoggerService, Injectable } from '@nestjs/common';
-import { COLORS, printText } from '../printText';
+import { COLORS, printText } from '../utils/printText';
 
 @Injectable()
 export class LoggingService implements LoggerService {
@@ -14,7 +14,7 @@ export class LoggingService implements LoggerService {
     ...optionalParams: unknown[]
   ): void {
     console.log(
-      printText('[LOG]', 'green'),
+      printText('[CUSTOM LOG]', 'green'),
       `${COLORS.green}${this.getTimestamp()} ${message}${COLORS.reset}`,
       `${COLORS.cyan}[${context}]${COLORS.reset}`,
       ...optionalParams,
@@ -27,7 +27,7 @@ export class LoggingService implements LoggerService {
     ...optionalParams: unknown[]
   ): void {
     console.error(
-      printText('[FATAL]', 'magenta'),
+      printText('[CUSTOM FATAL]', 'magenta'),
       `${COLORS.magenta}${this.getTimestamp()} ${message}${COLORS.reset}`,
       `${COLORS.cyan}[${context}]${COLORS.reset}`,
       ...optionalParams,
@@ -40,7 +40,7 @@ export class LoggingService implements LoggerService {
     ...optionalParams: unknown[]
   ): void {
     console.error(
-      printText('[ERROR]', 'red'),
+      printText('[CUSTOM ERROR]', 'red'),
       `${COLORS.red}${this.getTimestamp()} ${message}${COLORS.reset}`,
       `${COLORS.cyan}[${context}]${COLORS.reset}`,
       ...optionalParams,
@@ -53,7 +53,7 @@ export class LoggingService implements LoggerService {
     ...optionalParams: unknown[]
   ): void {
     console.warn(
-      printText('[WARN]', 'yellow'),
+      printText('[CUSTOM WARN]', 'yellow'),
       `${COLORS.yellow}${this.getTimestamp()} ${message}${COLORS.reset}`,
       `${COLORS.cyan}[${context}]${COLORS.reset}`,
       ...optionalParams,
@@ -66,7 +66,7 @@ export class LoggingService implements LoggerService {
     ...optionalParams: unknown[]
   ): void {
     console.debug(
-      printText('[DEBUG]', 'cyan'),
+      printText('[CUSTOM DEBUG]', 'cyan'),
       `${COLORS.cyan}${this.getTimestamp()} ${message}${COLORS.reset}`,
       `${COLORS.cyan}[${context}]${COLORS.reset}`,
       ...optionalParams,
@@ -79,7 +79,7 @@ export class LoggingService implements LoggerService {
     ...optionalParams: unknown[]
   ): void {
     console.info(
-      printText('[VERBOSE]', 'blue'),
+      printText('[CUSTOM VERBOSE]', 'blue'),
       `${COLORS.blue}${this.getTimestamp()} ${message}${COLORS.reset}`,
       `${COLORS.cyan}[${context}]${COLORS.reset}`,
       ...optionalParams,
