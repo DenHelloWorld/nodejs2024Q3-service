@@ -5,8 +5,11 @@ import * as fs from 'fs/promises';
 import * as YAML from 'yaml';
 
 import 'dotenv/config';
+import { LoggingService } from './core/logging/logging.service';
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: new LoggingService(),
+  });
 
   const doc = fs.readFile('doc/api.yaml', 'utf8');
   const swaggerDoc = YAML.parse(await doc);
