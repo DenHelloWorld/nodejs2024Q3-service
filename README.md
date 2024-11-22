@@ -46,7 +46,7 @@ npm install
       > [Docker](https://www.docker.com/get-started/) must be installed and running on your device
 
 ```bash
-npm run docker:build
+npm run docker:up
 ```
 ```bash
 npm run migration:generate
