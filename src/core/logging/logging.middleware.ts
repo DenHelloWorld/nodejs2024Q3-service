@@ -1,11 +1,11 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { Request, Response, NextFunction } from 'express';
 import { LoggingService } from './logging.service';
+import { Req, Res, NextFunc } from './middleware.models';
 
 @Injectable()
 export class LoggingMiddleware implements NestMiddleware {
   private readonly loggingService = new LoggingService();
-  use(req: Request, res: Response, next: NextFunction) {
+  use(req: Req, res: Res, next: NextFunc) {
     const { method, originalUrl, query, body } = req;
     this.loggingService.verbose(
       `[REQUEST] ${method} [url]:${originalUrl} - [query parameters]: ${JSON.stringify(

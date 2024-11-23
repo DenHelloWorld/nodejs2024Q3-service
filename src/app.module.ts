@@ -8,11 +8,12 @@ import { AlbumModule } from './features/album/album.module';
 import { FavsModule } from './features/favs/favs.module';
 import { LoggingService } from './core/logging/logging.service';
 import { LoggingMiddleware } from './core/logging/logging.middleware';
+import { ErrorHandlerService } from './core/logging/errorHandle.service';
 
 @Module({
   imports: [UserModule, TrackModule, ArtistModule, AlbumModule, FavsModule],
   controllers: [AppController],
-  providers: [AppService, LoggingService],
+  providers: [AppService, LoggingService, ErrorHandlerService],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
