@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  HttpCode,
+  HttpStatus,
   Post,
   UnauthorizedException,
   UsePipes,
@@ -9,6 +11,7 @@ import {
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { Public } from './public.decorator';
+import { RefreshTokenDto } from './dto/refresh-token.dto';
 
 @Controller('auth')
 @UsePipes(new ValidationPipe())
@@ -25,11 +28,13 @@ export class AuthController {
     return await this.authService.login(createUserDto);
   }
 
+  @Public()
   @Post('refresh')
-  async refresh(@Body('refreshToken') refreshToken: string) {
-    if (!refreshToken) {
-      throw new UnauthorizedException('Refresh token is required');
-    }
-    return await this.authService.refresh(refreshToken);
+  @HttpCode(HttpStatus.OK)
+  async refresh(@Body() refreshTokenDto: RefreshTokenDto) {
+    // if (!refreshTokenDto.refreshToken) {
+    //   throw new UnauthorizedException('No refresh token');
+    // }
+    return await this.authService.refresh(refreshTokenDto.refreshToken);
   }
 }

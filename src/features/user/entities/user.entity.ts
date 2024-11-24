@@ -28,6 +28,12 @@ export class User implements UserData {
   @Column()
   updatedAt: number;
 
+  @Column()
+  accessToken: string;
+
+  @Column()
+  refreshToken: string;
+
   omitPassword(): Omit<UserData, 'password'> {
     return {
       id: this.id,
@@ -35,6 +41,8 @@ export class User implements UserData {
       version: this.version,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
+      accessToken: this.accessToken,
+      refreshToken: this.refreshToken,
     };
   }
 }

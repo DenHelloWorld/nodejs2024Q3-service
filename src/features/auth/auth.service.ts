@@ -1,4 +1,9 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import * as bcrypt from 'bcrypt';
 import { DbService } from '../../core/db/db.service';
@@ -49,6 +54,8 @@ export class AuthService {
 
     const accessToken = this.generateAccessToken(user.id, user.login);
     const refreshToken = this.generateRefreshToken(user.id, user.login);
+    user.accessToken = accessToken;
+    user.refreshToken = refreshToken;
 
     return {
       id: user.id,
@@ -59,26 +66,28 @@ export class AuthService {
   }
 
   async refresh(refreshToken: string) {
-    try {
-      const payload = this.jwtService.verify(refreshToken, {
-        secret: process.env.JWT_SECRET_REFRESH_KEY,
-      });
+    const user = this.db
+      .getUsers()
+      .find((user) => user.refreshToken === refreshToken);
 
-      const user = this.db
-        .getUsers()
-        .find((user) => user.id === payload.userId);
-
-      if (!user) {
-        throw new UnauthorizedException('Invalid refresh token');
-      }
-
-      const newAccessToken = this.generateAccessToken(user.id, user.login);
-      const newRefreshToken = this.generateRefreshToken(user.id, user.login);
-
-      return { accessToken: newAccessToken, refreshToken: newRefreshToken };
-    } catch {
-      throw new UnauthorizedException('Invalid refresh token');
+    if (!user) {
+      throw new ForbiddenException('Invalid refresh token');
     }
+
+    this.jwtService.verify(refreshToken, {
+      secret: process.env.JWT_SECRET_REFRESH_KEY,
+    });
+
+    const newAccessToken = this.generateAccessToken(user.id, user.login);
+    const newRefreshToken = this.generateRefreshToken(user.id, user.login);
+
+    user.refreshToken = newRefreshToken;
+    user.accessToken = newAccessToken;
+
+    return {
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    };
   }
 
   private generateAccessToken(userId: string, login: string): string {

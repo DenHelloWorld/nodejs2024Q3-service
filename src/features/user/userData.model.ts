@@ -5,4 +5,6 @@ export interface UserData {
   password: string;
   createdAt: number;
   updatedAt: number;
+  accessToken: string;
+  refreshToken: string;
 }
