@@ -22,7 +22,11 @@ export class AuthService {
     if (userExists) {
       throw new UnauthorizedException('The user with this login exists');
     }
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const saltOrRounds = process.env.CRYPT_SALT;
+    const hashedPassword = await bcrypt.hash(
+      createUserDto.password,
+      +saltOrRounds || 10,
+    );
 
     const user: User = new User({
       login: createUserDto.login,

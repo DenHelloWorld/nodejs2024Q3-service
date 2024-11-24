@@ -10,7 +10,7 @@ import { UnauthorizedException } from '@nestjs/common';
 export class IsRefreshTokenNotEmpty implements ValidatorConstraintInterface {
   validate(value: string): boolean {
     if (!value || typeof value !== 'string' || value.trim() === '') {
-      throw new UnauthorizedException('No refresh toke');
+      throw new UnauthorizedException('No refresh token');
     }
     return true;
   }
