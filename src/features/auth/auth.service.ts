@@ -26,7 +26,7 @@ export class AuthService {
 
     this.db.getUsers().push(user);
 
-    return { message: 'User created successfully', user: user.omitPassword() };
+    return { ...user.omitPassword() };
   }
 
   async login(createUserDto: CreateUserDto) {
@@ -51,6 +51,7 @@ export class AuthService {
     const refreshToken = this.generateRefreshToken(user.id, user.login);
 
     return {
+      id: user.id,
       message: 'Login successful',
       accessToken,
       refreshToken,

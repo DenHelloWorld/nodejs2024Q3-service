@@ -1,7 +1,13 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { IS_PUBLIC_KEY } from './public.decorator';
+import 'dotenv/config';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -15,22 +21,35 @@ export class JwtAuthGuard implements CanActivate {
       IS_PUBLIC_KEY,
       context.getHandler(),
     );
+
     if (isPublic) {
-      return true; // Пропускать запрос, если это публичный маршрут
+      return true;
     }
 
     const request = context.switchToHttp().getRequest();
-    const authHeader = request.headers['authorization'];
-    if (!authHeader) return false;
+    const authHeader =
+      request.headers['authorization'] || request.headers['Authorization'];
 
-    const token = authHeader.split(' ')[1];
+    if (!authHeader) {
+      throw new UnauthorizedException('Authorization header is missing');
+    }
+
+    const [bearer, token] = authHeader.split(' ');
+
+    if (bearer !== 'Bearer' || !token) {
+      throw new UnauthorizedException('Authorization header is malformed');
+    }
+
     try {
-      this.jwtService.verify(token, {
+      const decoded = this.jwtService.verify(token, {
         secret: process.env.JWT_SECRET_KEY,
       });
+
+      request.user = decoded;
+
       return true;
-    } catch {
-      return false;
+    } catch (error) {
+      throw new UnauthorizedException('Invalid or expired token');
     }
   }
 }
