@@ -24,6 +24,7 @@ Home Library is a Node.js and NestJS-based application designed to manage a pers
     - `JWT_SECRET_REFRESH_KEY=secret123123`
     - `TOKEN_EXPIRE_TIME=1h`
     - `TOKEN_REFRESH_EXPIRE_TIME=24h`
+
 4.  **Run the application:**
     - `npm run start`
 5.  **Run auth tests**
