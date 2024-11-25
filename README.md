@@ -15,6 +15,7 @@ Home Library is a Node.js and NestJS-based application designed to manage a pers
     - `git clone <repository-url>`
     - `cd nodejs2024Q3-service`
 2.  **Install dependencies:**
+    - `git checkout home-lib-3`
     - `npm install`
 3.  **Set environment variables:** Create a `.env` file in the project root and configure it based on your setup. For example:
     - `PORT1=4000`
