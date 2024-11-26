@@ -22,6 +22,7 @@ export class DbService {
     };
     return favorites;
   }
+
   getFavorites(): Favorites {
     return data.favorites;
   }

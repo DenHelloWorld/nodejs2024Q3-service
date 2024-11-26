@@ -5,8 +5,10 @@ import { DbService } from '../../core/db/db.service';
 import { TrackService } from '../track/track.service';
 import { AlbumService } from '../album/album.service';
 import { ArtistService } from '../artist/artist.service';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
+  imports: [JwtModule],
   controllers: [FavsController],
   providers: [
     FavsService,
