@@ -18,7 +18,7 @@ Home Library is a Node.js and NestJS-based application designed to manage a pers
     - `git checkout home-lib-3`
     - `npm install`
 3.  **Set environment variables:** Create a `.env` file in the project root and configure it based on your setup. For example:
-    - `PORT1=4000`
+    - `PORT=4000`
     - `CRYPT_SALT=10`
     - `JWT_SECRET_KEY=secret123123`
     - `JWT_SECRET_REFRESH_KEY=secret123123`
